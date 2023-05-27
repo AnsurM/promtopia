@@ -1,45 +1,28 @@
-"use client";
-import Form from "@components/Form";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import "@styles/globals.css";
 
-const CreatePrompt = () => {
-  const [submitting, setSubmitting] = useState(false);
-  const [post, setPost] = useState({ prompt: "", tag: "" });
+import Nav from "@components/Nav";
+import Provider from "@components/Provider";
 
-  const router = useRouter();
-  const { data: session } = useSession();
-  const createPrompt = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const response = await fetch(`/api/prompt/new`, {
-        method: "post",
-        body: JSON.stringify({
-          prompt: post.prompt,
-          userId: session?.user.id,
-          tag: post.tag,
-        }),
-      });
-
-      if (response.ok) router.push("/");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <Form
-      type="Create"
-      post={post}
-      setPost={setPost}
-      submitting={submitting}
-      handleSubmit={createPrompt}
-    />
-  );
+export const metadata = {
+  title: "Promptopia",
+  description: "Discover & Share AI Prompts",
 };
 
-export default CreatePrompt;
+const RootLayout = ({ children }) => (
+  <html lang="en">
+    <body>
+      <Provider>
+        <div className="main">
+          <div className="gradient" />
+        </div>
+
+        <main className="app">
+          <Nav />
+          {children}
+        </main>
+      </Provider>
+    </body>
+  </html>
+);
+
+export default RootLayout;
